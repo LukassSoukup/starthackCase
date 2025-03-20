@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+black
+python-dotenv
+requests
+matplotlib
+google-genai
