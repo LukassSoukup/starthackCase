@@ -98,7 +98,7 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {riskFactors.map((factor, index) => (
-          <Card key={index} className="flex flex-col gap-2">
+          <Card key={index} className="flex flex-col gap-2 p-4">
             <CardHeader className="pb-2 px-4 sm:px-6 py-1 sm:py-4">
               <div className="flex items-center justify-start gap-2">
                 <div className="flex items-center gap-2">
