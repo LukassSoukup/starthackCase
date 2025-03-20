@@ -1,5 +1,4 @@
-import json
-from datetime import datetime, date, timedelta
+from datetime import date, timedelta
 from syngenta.syngenta_api import CEHubClient
 from collections import defaultdict
 
