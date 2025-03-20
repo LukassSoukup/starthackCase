@@ -2,13 +2,12 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import RiskAssessment from "@/components/risk-assessment"
 import ProductRecommendations from "@/components/product-recommendations"
 import SeasonalTracker from "@/components/seasonal-tracker"
-import { ArrowLeft, RefreshCw } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { LoadingDashboard } from "@/components/loading-dashboard"
 
 export default function DashboardPage() {
@@ -17,7 +16,7 @@ export default function DashboardPage() {
   const [crop, setCrop] = useState<string>("")
   const [activeTab, setActiveTab] = useState("risks")
   const [loading, setLoading] = useState(true)
-
+console.log("activeTab", activeTab);
   useEffect(() => {
     // Get the selected location and crop from localStorage
     const storedLocation = localStorage.getItem("selectedLocation")
@@ -66,6 +65,12 @@ export default function DashboardPage() {
     )
   }
 
+  const handleSerisouRiskFactor = (factor: any) => {
+    if (factor.level > 70) {
+      setActiveTab("recommendations");
+    }
+  }
+
   return (
     <div className="container mx-auto px-6 py-8">
       
@@ -97,7 +102,7 @@ export default function DashboardPage() {
 
 
           <TabsContent value="risks">
-            <RiskAssessment location={location} crop={crop} />
+            <RiskAssessment location={location} crop={crop} handleSerisouRiskFactor={handleSerisouRiskFactor}/>
           </TabsContent>
           <TabsContent value="recommendations">
             <ProductRecommendations location={location} crop={crop} />

@@ -14,12 +14,11 @@ interface ProductRecommendationsProps {
 interface Product {
   id: string
   name: string
-  type: string[]
+  type: string
   description: string,
   benefits: string[]
   applicationTiming: string
   efficacyScore: number
-  sustainabilityScore: number,
   link: string
 }
 
@@ -40,34 +39,31 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
           {
             id: "bio-1",
             name: "Stress Buster",
-            type: ["Anti-stress and growth activator"],
+            type: "Anti-stress and growth activator",
             description: "Our comprehensive portfolio include biostimulant that contains a complex of selected vegetal extracts derived from selected plants. • When applied in case of abiotic stresses, its synergistic action of different active ingredients, allows the plants to tolerate and quickly overcome the stress, preserving yield. • Applied regularly in normal condition, optimizes plant growth.",
             benefits: ["Enhances stress tolerance, preserves yield, and supports overall plant health."],
             applicationTiming: "Apply when stress is predicted or regularly for growth enhancement.",
             efficacyScore: 95,
-            sustainabilityScore: 98,
             link: "https://www.syngenta.co.in/crop-protection"
           },
           {
             id: "bio-2",
             name: "Yield Booster",
-            type: ["Highest crop productivity", "Highest return for farmers"],
+            type: "Highest crop productivity",
             description: "In our portfolio we have a biostimulant for row crops able to ensure highest productivity and return for farmers. This solution is able to increase plant productivity through: • Better transport of sugars and nutrients • Promotion of cell division • Fatty acids biosynthesis and transport",
             benefits: ["Boosts productivity and maximizes return on investment for farmers."],
             applicationTiming: "Apply before the growing season based on historical data and weather forecasts.",
             efficacyScore: 81,
-            sustainabilityScore: 59,
             link: "https://www.syngentabiologicals.com/usa/en-us/products/farm/micronutrients/"
           },
           {
             id: "bio-3",
             name: "Nutrient Booster",
-            type: ["Biofertilizer"],
+            type: "Biofertilizer",
             description: "Different factors influence that can limit the availability of Nitrogen,Phosphorus and other nutrients:• ammonia volatilization, nitrification, denitrification, immobilization.• Leaching, runoff, temperature, soil pH, soil texture, rainfall and irrigation, soilsalinity, tillage, weeds, pests, diseases, nutrients loss from plants, croprotation, crop nutrition, crop varieties.• Nutritional management (right time, right source, right place, and rightrate/amount).Nutrient Use Efficiency (NUE) products are biological products thatare used for fixing Nitrogen, Phosphorus solubilization, improvingnutrient availability and uptake, and promoting plant growth and soil health.",
             benefits: ["Optimizes nutrient management, reduces the need for synthetic fertilizers, and supports sustainable farming practices."],
             applicationTiming: "Apply before the season as a seed treatment or foliar spray.",
             efficacyScore: 90,
-            sustainabilityScore: 91,
             link: "https://www.syngentabiologicals.com/usa/en-us/products/farm/biostimulants/"
           }
         ]
@@ -115,11 +111,9 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
                     <Leaf className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 mr-2" />
                     {product.name}
                   </CardTitle>
-                  {product.type.map((type, index) => (
-                    <Badge key={index} variant="outline" className="mt-1 text-xs">
-                      {type}
-                    </Badge>
-                  ))}
+                  <Badge variant="outline" className="mt-1 text-xs">
+                    {product.type}
+                  </Badge>
                 </div>
                 <div className="flex space-x-4 items-center">
                     <button 

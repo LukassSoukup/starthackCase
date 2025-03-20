@@ -2,14 +2,17 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Thermometer, Droplets, Bug, Wind, TriangleAlert } from "lucide-react"
+import { Droplets, TriangleAlert, Moon, Sun, Snowflake } from "lucide-react"
+import { fetchRisks } from "@/app/server/api/ApiHandler"
+import { getLocation } from "@/lib/utils"
 
 interface RiskAssessmentProps {
   location: string
   crop: string
+  handleSerisouRiskFactor: (factor: RiskFactor) => void
 }
 
 interface RiskFactor {
@@ -20,60 +23,79 @@ interface RiskFactor {
   color: string
 }
 
-export default function RiskAssessment({ location, crop }: RiskAssessmentProps) {
+export default function RiskAssessment({ location, crop, handleSerisouRiskFactor }: RiskAssessmentProps) {
   const [riskFactors, setRiskFactors] = useState<RiskFactor[]>([])
   const [loading, setLoading] = useState(true)
+  const { latitude, longitude } = getLocation();
+
+  if (latitude === 0 || longitude === 0) {
+    console.error("Location not available")
+    return <div className="text-red-500">Location not available</div>
+  }
 
   useEffect(() => {
-    // Simulate API call to get risk factors based on location and crop
-    const fetchRiskFactors = () => {
+    const fetchRiskFactors = async () => {
       setLoading(true)
 
-      // This would be replaced with actual API call
-      setTimeout(() => {
-        // Mock data - in a real app, this would come from an API
-        const mockRiskFactors: RiskFactor[] = [
+      try {
+        // Fetch risks from the API
+        const response = await fetchRisks(latitude, longitude, crop)
+        console.log("Risk factors response:", response)
+        // Map the API response to the mockRiskFactors
+        const updatedRiskFactors: RiskFactor[] = [
           {
-            name: "Temperature Stress",
-            level: 23,
-            description: `${crop === "rice" ? "Temperature variations may affect flowering" : "Temperature fluctuations could impact growth"}`,
-            icon: <Thermometer className="h-10 w-10" />,
+            name: "Day time heat stress",
+            level: response.daytime_heat_stress*10 || 0,
+            description: `${
+              crop === "rice"
+                ? "Temperature variations may affect flowering"
+                : "Temperature fluctuations could impact growth"
+            }`,
+            icon: <Sun className="h-10 w-10" />,
             color: "text-red-500",
           },
           {
-            name: "Water Stress",
-            level: 60,
-            description: `${crop === "rice" ? "Water availability during critical growth stages" : "Irrigation needs based on local precipitation patterns"}`,
+            name: "Drought Stress",
+            level: Math.max(0, Math.min(100, (1 - response.drought_index) * 100)) || 0, // > 1 no risk, = 1 medium risk, < 1 high risk
+            description: `${
+              crop === "rice"
+                ? "Water availability during critical growth stages"
+                : "Irrigation needs based on local precipitation patterns"
+            }`,
             icon: <Droplets className="h-10 w-10" />,
             color: "text-blue-500",
           },
           {
-            name: "Pest Pressure",
-            level: 65,
-            description: `${crop === "cotton" ? "Risk of bollworm infestation" : "Typical pest pressure for this crop type"}`,
-            icon: <Bug className="h-10 w-10" />,
+            name: "Night time heat stress",
+            level: response.nighttime_heat_stress*10 || 0,
+            description: "High night time temperatures can affect plant growth",
+            icon: <Moon className="h-10 w-10" />,
             color: "text-yellow-950",
           },
           {
-            name: "Wind Damage",
-            level: 80,
-            description: "Wind patterns may affect plant structure and pollination",
-            icon: <Wind className="h-10 w-10" />,
+            name: "Frost stress",
+            level: response.frost_stress*10 || 0,
+            description: "Low temperatures can casue serious demage to the plant",
+            icon: <Snowflake className="h-10 w-10" />,
             color: "text-gray-500",
           },
         ]
 
-        const sortedRiskFactors = mockRiskFactors.sort((a, b) => b.level - a.level);
+        // Sort the risk factors by level in descending order
+        const sortedRiskFactors = updatedRiskFactors.sort((a, b) => b.level - a.level)
 
         setRiskFactors(sortedRiskFactors)
+      } catch (error) {
+        console.error("Error fetching risks:", error)
+      } finally {
         setLoading(false)
-      }, 1000)
+      }
     }
 
     if (location && crop) {
       fetchRiskFactors()
     }
-  }, [location, crop])
+  }, [latitude, longitude, crop, location])
 
   if (loading) {
     return (
@@ -98,7 +120,7 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {riskFactors.map((factor, index) => (
-          <Card key={index} className="relative flex flex-col gap-2 p-4">
+          <Card key={index} className="relative flex flex-col gap-2 p-4" onClick={() => handleSerisouRiskFactor(factor)}>
             <CardHeader className="pb-2 px-4 sm:px-6 py-1 sm:py-4 flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <div className={`mr-2 ${factor.color}`}>{factor.icon}</div>
@@ -110,7 +132,9 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
               <Progress
                 value={factor.level}
                 className="h-2"
-                barColor={`${factor.level > 70 ? "bg-red-400" : factor.level > 40 ? "bg-yellow-400" : "bg-green-400"}`}
+                barColor={`${
+                  factor.level > 70 ? "bg-red-400" : factor.level > 40 ? "bg-yellow-400" : "bg-green-400"
+                }`}
               />
             </CardContent>
           </Card>
