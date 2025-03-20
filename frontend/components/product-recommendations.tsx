@@ -3,10 +3,8 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Leaf, Calendar, ThumbsUp, Info, ArrowUp, ArrowBigDown, ArrowBigUp } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import {BiostimulantInfo, BiostimulantBenefits} from "@/components/utils/ProductDescription"
 
 interface ProductRecommendationsProps {
   location: string
