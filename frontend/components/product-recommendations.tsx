@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Leaf, Calendar, ThumbsUp, Info, ArrowUp, ArrowBigDown, ArrowBigUp } from "lucide-react"
+import { Leaf, Calendar, ThumbsUp, ArrowBigDown, ArrowBigUp, ShoppingCart } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface ProductRecommendationsProps {
@@ -104,7 +104,10 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
 
       <div className="space-y-3 sm:space-y-4">
         {products.map((product) => (
-          <Card key={product.id} className="overflow-hidden" onClick={() => setExpandedProductId(product.id == expandedProductId ? null : product.id)}>
+          <Card key={product.id} className="overflow-hidden" onClick={(e) => {
+            if ((e.target as HTMLElement).closest("button")) return;
+            setExpandedProductId(product.id === expandedProductId ? null : product.id);
+          }}>
             <CardHeader className=" px-3 sm:px-6 py-3 sm:py-4 bg-green-50">
               <div className="flex justify-between items-start flex-wrap gap-2">
                 <div>
@@ -118,19 +121,25 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
                     </Badge>
                   ))}
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex space-x-4 items-center">
+                    <button 
+                    className="flex items-center hover:bg-yellow-50 text-gray-800 px-3 py-2 rounded text-sm sm:text-base"
+                    onClick={() => window.open(product.link, "_blank")}
+                    >
+                    <ShoppingCart className="h-6 w-6 text-gray-600 mr-2" />
+                    </button>
                   <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center bg-green-100 text-green-800 px-2 py-1 rounded text-xs sm:text-sm">
-                          <ThumbsUp className="h-3 w-3 mr-1" />
-                          <span>{product.efficacyScore}%</span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Efficacy score based on field trials</p>
-                      </TooltipContent>
-                    </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                    <div className="flex items-center bg-green-100 text-green-800 px-3 py-2 rounded text-sm sm:text-base">
+                      <ThumbsUp className="h-4 w-4 mr-2" />
+                      <span>{product.efficacyScore}%</span>
+                    </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                    <p>Efficacy score based on field trials</p>
+                    </TooltipContent>
+                  </Tooltip>
                   </TooltipProvider>
                 </div>
               </div>
