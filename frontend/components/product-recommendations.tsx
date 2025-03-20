@@ -4,8 +4,9 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Leaf, Calendar, ThumbsUp, Info } from "lucide-react"
+import { Leaf, Calendar, ThumbsUp, Info, ArrowUp, ArrowBigDown, ArrowBigUp } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import {BiostimulantInfo, BiostimulantBenefits} from "@/components/utils/ProductDescription"
 
 interface ProductRecommendationsProps {
   location: string
@@ -15,17 +16,19 @@ interface ProductRecommendationsProps {
 interface Product {
   id: string
   name: string
-  type: string
-  description: string
+  type: string[]
+  description: string,
   benefits: string[]
   applicationTiming: string
   efficacyScore: number
-  sustainabilityScore: number
+  sustainabilityScore: number,
+  link: string
 }
 
 export default function ProductRecommendations({ location, crop }: ProductRecommendationsProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [expandedProductId, setExpandedProductId] = useState<string | null>(null)
 
   useEffect(() => {
     // Simulate API call to get product recommendations
@@ -38,35 +41,37 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
         const mockProducts: Product[] = [
           {
             id: "bio-1",
-            name: "NaturalShield Pro",
-            type: "Microbial Inoculant",
-            description: `Enhances ${crop} resilience against environmental stresses and improves nutrient uptake in various climate conditions.`,
-            benefits: ["Improves root development", "Enhances nutrient absorption", "Reduces transplant shock"],
-            applicationTiming: "Apply at planting or early growth stage",
-            efficacyScore: 92,
-            sustainabilityScore: 95,
+            name: "Stress Buster",
+            type: ["Anti-stress and growth activator"],
+            description: "Our comprehensive portfolio include biostimulant that contains a complex of selected vegetal extracts derived from selected plants. • When applied in case of abiotic stresses, its synergistic action of different active ingredients, allows the plants to tolerate and quickly overcome the stress, preserving yield. • Applied regularly in normal condition, optimizes plant growth.",
+            benefits: ["Enhances stress tolerance, preserves yield, and supports overall plant health."],
+            applicationTiming: "Apply when stress is predicted or regularly for growth enhancement.",
+            efficacyScore: 95,
+            sustainabilityScore: 98,
+            link: "https://www.syngenta.co.in/crop-protection"
           },
           {
             id: "bio-2",
-            name: "BioDefend",
-            type: "Biological Fungicide",
-            description: `Protects ${crop} against common fungal diseases while promoting plant health across different growing regions.`,
-            benefits: ["Controls powdery mildew", "Prevents root rot", "Stimulates plant immune system"],
-            applicationTiming: "Apply preventatively every 14-21 days",
-            efficacyScore: 88,
-            sustainabilityScore: 90,
+            name: "Yield Booster",
+            type: ["Highest crop productivity", "Highest return for farmers"],
+            description: "In our portfolio we have a biostimulant for row crops able to ensure highest productivity and return for farmers. This solution is able to increase plant productivity through: • Better transport of sugars and nutrients • Promotion of cell division • Fatty acids biosynthesis and transport",
+            benefits: ["Boosts productivity and maximizes return on investment for farmers."],
+            applicationTiming: "Apply before the growing season based on historical data and weather forecasts.",
+            efficacyScore: 81,
+            sustainabilityScore: 59,
+            link: "https://www.syngentabiologicals.com/usa/en-us/products/farm/micronutrients/"
           },
           {
             id: "bio-3",
-            name: "SoilVitality",
-            type: "Soil Amendment",
-            description:
-              "Improves soil structure and microbial activity for better crop establishment in diverse soil conditions.",
-            benefits: ["Enhances water retention", "Improves soil aeration", "Promotes beneficial microorganisms"],
-            applicationTiming: "Apply 2-4 weeks before planting",
-            efficacyScore: 85,
-            sustainabilityScore: 98,
-          },
+            name: "Nutrient Booster",
+            type: ["Biofertilizer"],
+            description: "Different factors influence that can limit the availability of Nitrogen,Phosphorus and other nutrients:• ammonia volatilization, nitrification, denitrification, immobilization.• Leaching, runoff, temperature, soil pH, soil texture, rainfall and irrigation, soilsalinity, tillage, weeds, pests, diseases, nutrients loss from plants, croprotation, crop nutrition, crop varieties.• Nutritional management (right time, right source, right place, and rightrate/amount).Nutrient Use Efficiency (NUE) products are biological products thatare used for fixing Nitrogen, Phosphorus solubilization, improvingnutrient availability and uptake, and promoting plant growth and soil health.",
+            benefits: ["Optimizes nutrient management, reduces the need for synthetic fertilizers, and supports sustainable farming practices."],
+            applicationTiming: "Apply before the season as a seed treatment or foliar spray.",
+            efficacyScore: 90,
+            sustainabilityScore: 91,
+            link: "https://www.syngentabiologicals.com/usa/en-us/products/farm/biostimulants/"
+          }
         ]
 
         setProducts(mockProducts)
@@ -101,17 +106,19 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
 
       <div className="space-y-3 sm:space-y-4">
         {products.map((product) => (
-          <Card key={product.id} className="overflow-hidden">
-            <CardHeader className="pb-2 px-3 sm:px-6 py-3 sm:py-4 bg-green-50">
+          <Card key={product.id} className="overflow-hidden" onClick={() => setExpandedProductId(product.id == expandedProductId ? null : product.id)}>
+            <CardHeader className=" px-3 sm:px-6 py-3 sm:py-4 bg-green-50">
               <div className="flex justify-between items-start flex-wrap gap-2">
                 <div>
                   <CardTitle className="text-base sm:text-lg flex items-center">
                     <Leaf className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 mr-2" />
                     {product.name}
                   </CardTitle>
-                  <Badge variant="outline" className="mt-1 text-xs">
-                    {product.type}
-                  </Badge>
+                  {product.type.map((type, index) => (
+                    <Badge key={index} variant="outline" className="mt-1 text-xs">
+                      {type}
+                    </Badge>
+                  ))}
                 </div>
                 <div className="flex space-x-2">
                   <TooltipProvider>
@@ -129,39 +136,34 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
                   </TooltipProvider>
                 </div>
               </div>
+                <div className="ml-auto">
+                {expandedProductId === null && (
+                  <ArrowBigDown className="h-4 w-4 text-gray-500" />
+                )}
+                {expandedProductId !== null && (
+                  <ArrowBigUp className="h-4 w-4 text-gray-500" />
+                )}
+                </div>
             </CardHeader>
-            <CardContent className="pt-3 sm:pt-4 px-3 sm:px-6">
-              <CardDescription className="text-sm sm:text-base text-gray-700 mb-3">
-                {product.description}
-              </CardDescription>
-
-              <div className="mt-2">
+            {expandedProductId === product.id && (
+            <CardContent className="pt-0 pb-7 pl-8">
+                <CardDescription className="text-sm sm:text-base text-gray-700 mb-3" title={product.name}>
+                  {product.description}
+                </CardDescription>
+                <div className="mt-2">
                 <h4 className="text-xs sm:text-sm font-medium mb-1">Key Benefits:</h4>
                 <ul className="list-disc pl-4 sm:pl-5 text-xs sm:text-sm text-gray-600 space-y-1">
                   {product.benefits.map((benefit, index) => (
-                    <li key={index}>{benefit}</li>
+                  <li key={index}>{benefit}</li>
                   ))}
                 </ul>
-              </div>
-
-              <div className="flex items-center mt-3 text-xs sm:text-sm text-gray-600">
+                </div>
+                <div className="flex items-center mt-3 text-xs sm:text-sm text-gray-600">
                 <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-gray-500" />
                 <span>{product.applicationTiming}</span>
-              </div>
+                </div>
             </CardContent>
-            <CardFooter className="bg-gray-50 flex flex-col sm:flex-row gap-2 sm:justify-between p-3 sm:p-4">
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-gray-600 w-full sm:w-auto text-xs sm:text-sm h-8 sm:h-9"
-              >
-                <Info className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                Product Details
-              </Button>
-              <Button size="sm" className="w-full sm:w-auto text-xs sm:text-sm h-8 sm:h-9">
-                Add to Plan
-              </Button>
-            </CardFooter>
+              )}
           </Card>
         ))}
       </div>
