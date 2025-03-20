@@ -3,9 +3,9 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Thermometer, Droplets, Bug, Wind } from "lucide-react"
+import { Thermometer, Droplets, Bug, Wind, TriangleAlert } from "lucide-react"
 
 interface RiskAssessmentProps {
   location: string
@@ -35,14 +35,14 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
         const mockRiskFactors: RiskFactor[] = [
           {
             name: "Temperature Stress",
-            level: 23, // Random level between 40-80
+            level: 23,
             description: `${crop === "rice" ? "Temperature variations may affect flowering" : "Temperature fluctuations could impact growth"}`,
             icon: <Thermometer className="h-10 w-10" />,
             color: "text-red-500",
           },
           {
             name: "Water Stress",
-            level: 60, // Random level between 30-80
+            level: 60,
             description: `${crop === "rice" ? "Water availability during critical growth stages" : "Irrigation needs based on local precipitation patterns"}`,
             icon: <Droplets className="h-10 w-10" />,
             color: "text-blue-500",
@@ -56,7 +56,7 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
           },
           {
             name: "Wind Damage",
-            level: 80, // Random level between 30-70
+            level: 80,
             description: "Wind patterns may affect plant structure and pollination",
             icon: <Wind className="h-10 w-10" />,
             color: "text-gray-500",
@@ -98,14 +98,13 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {riskFactors.map((factor, index) => (
-          <Card key={index} className="flex flex-col gap-2 p-4">
-            <CardHeader className="pb-2 px-4 sm:px-6 py-1 sm:py-4">
-              <div className="flex items-center justify-start gap-2">
-                <div className="flex items-center gap-2">
-                  <div className={`mr-2 ${factor.color}`}>{factor.icon}</div>
-                  <CardTitle className="text-base sm:text-lg">{factor.name}</CardTitle>
-                </div>
+          <Card key={index} className="relative flex flex-col gap-2 p-4">
+            <CardHeader className="pb-2 px-4 sm:px-6 py-1 sm:py-4 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <div className={`mr-2 ${factor.color}`}>{factor.icon}</div>
+                <CardTitle className="text-base sm:text-lg">{factor.name}</CardTitle>
               </div>
+              {factor.level > 70 && <TriangleAlert className="h-6 w-6 text-red-500 animate-pulse duration-200" />}
             </CardHeader>
             <CardContent className="px-4 sm:px-6 py-1 sm:py-3">
               <Progress
@@ -113,8 +112,6 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
                 className="h-2"
                 barColor={`${factor.level > 70 ? "bg-red-400" : factor.level > 40 ? "bg-yellow-400" : "bg-green-400"}`}
               />
-
-              {/* <CardDescription className="mt-2 text-xs sm:text-sm">{factor.description}</CardDescription> */}
             </CardContent>
           </Card>
         ))}
@@ -122,4 +119,3 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
     </div>
   )
 }
-
