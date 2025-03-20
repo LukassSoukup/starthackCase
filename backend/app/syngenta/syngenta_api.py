@@ -1,6 +1,7 @@
 import requests
 from typing import List, Dict, Union, Optional
 from dotenv import load_dotenv
+from datetime import date, timedelta
 import os
 
 load_dotenv(dotenv_path=".env")
@@ -15,7 +16,7 @@ class CEHubClient:
         """
         Initialize the CE Hub client.
         """
-        self.forecast_token = os.getenv("FORECAST_API_KEY")
+        self.forecast_token = "3b9ff1ee-c746-457b-a97c-0138ea3e1cc3"
         self.historical_token = "e4e4d60f7203"
         self.weather_source = "Meteoblue"
 
