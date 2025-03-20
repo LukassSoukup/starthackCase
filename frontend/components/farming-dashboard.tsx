@@ -16,6 +16,7 @@ export default function FarmingDashboard() {
   const [crop, setCrop] = useState("")
   const [step, setStep] = useState(1)
   const [activeTab, setActiveTab] = useState("risks")
+  console.log("activeTab", activeTab);
 
   // Update the handleLocationSelect function to handle both automatic and manual locations
   const handleLocationSelect = (selectedLocation: string) => {
@@ -28,7 +29,11 @@ export default function FarmingDashboard() {
     setCrop(selectedCrop)
     setStep(3)
   }
-
+  const handleSerisouRiskFactor = (factor: any) => {
+    if (factor.level > 70) {
+      setActiveTab("recommendations");
+    }
+  }
   const renderStepContent = () => {
     switch (step) {
       case 1:
@@ -44,7 +49,7 @@ export default function FarmingDashboard() {
               <TabsTrigger value="tracker">Seasonal Tracker</TabsTrigger>
             </TabsList>
             <TabsContent value="risks">
-              <RiskAssessment location={location} crop={crop} />
+              <RiskAssessment location={location} crop={crop} handleSerisouRiskFactor={handleSerisouRiskFactor}/>
             </TabsContent>
             <TabsContent value="recommendations">
               <ProductRecommendations location={location} crop={crop} />

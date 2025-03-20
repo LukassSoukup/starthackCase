@@ -88,6 +88,9 @@ export default function LocationSelector({ onSelect }: LocationSelectorProps) {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords
+          localStorage.setItem("longitude", longitude.toString());
+          localStorage.setItem("latitude", latitude.toString());
+
           const locationName = await getLocationNameFromCoords(latitude, longitude)
 
           setManualLocation(locationName)
