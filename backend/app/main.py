@@ -1,8 +1,16 @@
 import fastapi
 import uvicorn
+from gemini import recommendation_system
+from fastapi.middleware.cors import CORSMiddleware
 
 app = fastapi.FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow only specific origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 @app.get("/risks")
 def get_risks(lat: float, lon: float, crop: str):
@@ -16,20 +24,7 @@ def get_risks(lat: float, lon: float, crop: str):
 
 @app.get("/recommendations")
 def get_recommendations(lat: float, lon: float, crop: str):
-    return [
-        {
-            "text": "Good product for you",
-            "product": "Product A",
-        },
-        {
-            "text": "This product is not recommended",
-            "product": "Product B",
-        },
-        {
-            "text": "This is the best product for you",
-            "product": "Product C",
-        },
-    ]
+    return recommendation_system(crop, lat, lon)
 
 
 @app.get("/results")
