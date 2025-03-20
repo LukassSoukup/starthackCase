@@ -120,3 +120,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+.progress-bar-red {
+  background-color: #ef4444; /* Tailwind Red */
+}
+
+.progress-bar-yellow {
+  background-color: #f59e0b; /* Tailwind Yellow */
+}
+
+.progress-bar-green {
+  background-color: #10b981; /* Tailwind Green */
+}
+

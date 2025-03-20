@@ -58,7 +58,7 @@ export default function DashboardPage() {
     return (
       <div className="container mx-auto px-4 py-6 sm:py-8">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-green-700 mb-2">
-          Nature-Powered Farming
+          HarvestGuard
         </h1>
         <p className="text-center text-gray-600 mb-6 sm:mb-8">Loading your dashboard...</p>
         <LoadingDashboard />
@@ -67,71 +67,46 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-green-700 mb-2">
-        Nature-Powered Farming
-      </h1>
-      <p className="text-center text-gray-600 mb-6 sm:mb-8">Sustainable farming solutions powered by AI</p>
+    <div className="container mx-auto px-6 py-8">
+      
+      <h1 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-2">HarvestGuard</h1>
+      <p className="text-center text-gray-600 mb-8">Dashboard</p>
 
-      <Card className="w-full">
-        <CardContent className="p-3 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
-            <div className="flex items-center">
-              <Button variant="ghost" onClick={handleBack} className="mr-2 h-9 px-2 sm:h-10 sm:px-4">
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                <span className="sm:inline">Back</span>
-              </Button>
-              <h2 className="text-xl sm:text-2xl font-semibold">Your Farming Dashboard</h2>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleResetAll}
-              className="flex items-center text-gray-500 self-end sm:self-auto"
-            >
-              <RefreshCw className="h-3 w-3 mr-1" />
-              Reset All
-            </Button>
-          </div>
+      <div className="mb-4 flex justify-between items-center">
+        <Button variant="ghost" onClick={handleBack} className="flex items-center">
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back
+        </Button>
+        <p className="text-sm text-gray-500">
+          Location: <span className="font-medium">{location}</span>
+        </p>
+      </div>
 
-          <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 h-auto">
-              <TabsTrigger value="risks" className="py-2 text-xs sm:text-sm">
-                Risks
-              </TabsTrigger>
-              <TabsTrigger value="recommendations" className="py-2 text-xs sm:text-sm">
-                Recommendations
-              </TabsTrigger>
-              <TabsTrigger value="tracker" className="py-2 text-xs sm:text-sm">
-                Seasonal Tracker
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="risks">
-              <RiskAssessment location={location} crop={crop} />
-            </TabsContent>
-            <TabsContent value="recommendations">
-              <ProductRecommendations location={location} crop={crop} />
-            </TabsContent>
-            <TabsContent value="tracker">
-              <SeasonalTracker location={location} crop={crop} />
-            </TabsContent>
-          </Tabs>
+        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="flex flex-wrap justify-between w-full h-auto">
+            <TabsTrigger value="risks" className="py-2 text-xs sm:text-sm w-full sm:w-auto">
+              Risks
+            </TabsTrigger>
+            <TabsTrigger value="recommendations" className="py-2 text-xs sm:text-sm w-full sm:w-auto">
+              Recommendations
+            </TabsTrigger>
+            <TabsTrigger value="tracker" className="py-2 text-xs sm:text-sm w-full sm:w-auto">
+              Seasonal Tracker
+            </TabsTrigger>
+          </TabsList>
 
-          <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-            <div>
-              <p className="text-sm text-gray-500">
-                Location: <span className="font-medium">{location}</span>
-              </p>
-              <p className="text-sm text-gray-500">
-                Crop: <span className="font-medium">{crop}</span>
-              </p>
-            </div>
-            <Button variant="outline" onClick={handleChangeSelection} className="w-full sm:w-auto">
-              Change Selection
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+
+          <TabsContent value="risks">
+            <RiskAssessment location={location} crop={crop} />
+          </TabsContent>
+          <TabsContent value="recommendations">
+            <ProductRecommendations location={location} crop={crop} />
+          </TabsContent>
+          <TabsContent value="tracker">
+            <SeasonalTracker location={location} crop={crop} />
+          </TabsContent>
+        </Tabs>
+
     </div>
   )
 }

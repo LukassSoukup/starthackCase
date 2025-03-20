@@ -127,20 +127,6 @@ export default function ProductRecommendations({ location, crop }: ProductRecomm
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs sm:text-sm">
-                          <Leaf className="h-3 w-3 mr-1" />
-                          <span>{product.sustainabilityScore}%</span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Sustainability score</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
                 </div>
               </div>
             </CardHeader>

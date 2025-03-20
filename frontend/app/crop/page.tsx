@@ -33,15 +33,15 @@ export default function CropPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-2">Nature-Powered Farming</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-2">HarvestGuard</h1>
         <p className="text-center text-gray-600 mb-8">Loading...</p>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-2">Nature-Powered Farming</h1>
+    <div className="container mx-auto px-6 py-8">
+      <h1 className="text-3xl md:text-4xl font-bold text-center text-green-700 mb-2">HarvestGuard</h1>
       <p className="text-center text-gray-600 mb-8">What are you growing?</p>
 
       <div className="mb-4 flex justify-between items-center">

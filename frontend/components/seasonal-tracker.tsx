@@ -126,24 +126,21 @@ export default function SeasonalTracker({ location, crop }: SeasonalTrackerProps
         </CardContent>
       </Card>
 
-      <Card className="mt-4 sm:mt-6">
-        <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+      <Card className="mt-1 sm:mt-1">
+        <CardHeader className="px-3 sm:px-6">
           <CardTitle className="text-base sm:text-lg flex items-center">
             <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-blue-500" />
             Season Performance Tracking
           </CardTitle>
         </CardHeader>
-        <CardContent className="px-3 sm:px-6 py-2 sm:py-4">
+        <CardContent className="px-3 sm:px-6">
           <Tabs defaultValue="yield">
-            <TabsList className="grid w-full grid-cols-3 h-auto">
+            <TabsList className="grid w-full grid-cols-2 h-auto">
               <TabsTrigger value="yield" className="text-xs sm:text-sm py-1 sm:py-2">
                 Yield Forecast
               </TabsTrigger>
               <TabsTrigger value="health" className="text-xs sm:text-sm py-1 sm:py-2">
                 Crop Health
-              </TabsTrigger>
-              <TabsTrigger value="sustainability" className="text-xs sm:text-sm py-1 sm:py-2">
-                Sustainability
               </TabsTrigger>
             </TabsList>
             <TabsContent value="yield" className="pt-3 sm:pt-4">

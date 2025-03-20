@@ -35,35 +35,37 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
         const mockRiskFactors: RiskFactor[] = [
           {
             name: "Temperature Stress",
-            level: Math.floor(Math.random() * 40) + 40, // Random level between 40-80
+            level: 23, // Random level between 40-80
             description: `${crop === "rice" ? "Temperature variations may affect flowering" : "Temperature fluctuations could impact growth"}`,
-            icon: <Thermometer className="h-5 w-5" />,
-            color: "text-orange-500",
+            icon: <Thermometer className="h-10 w-10" />,
+            color: "text-red-500",
           },
           {
             name: "Water Stress",
-            level: Math.floor(Math.random() * 50) + 30, // Random level between 30-80
+            level: 60, // Random level between 30-80
             description: `${crop === "rice" ? "Water availability during critical growth stages" : "Irrigation needs based on local precipitation patterns"}`,
-            icon: <Droplets className="h-5 w-5" />,
+            icon: <Droplets className="h-10 w-10" />,
             color: "text-blue-500",
           },
           {
             name: "Pest Pressure",
-            level: crop === "cotton" ? 75 : crop === "rice" ? 65 : 55,
+            level: 65,
             description: `${crop === "cotton" ? "Risk of bollworm infestation" : "Typical pest pressure for this crop type"}`,
-            icon: <Bug className="h-5 w-5" />,
-            color: "text-red-500",
+            icon: <Bug className="h-10 w-10" />,
+            color: "text-yellow-950",
           },
           {
             name: "Wind Damage",
-            level: Math.floor(Math.random() * 40) + 30, // Random level between 30-70
+            level: 80, // Random level between 30-70
             description: "Wind patterns may affect plant structure and pollination",
-            icon: <Wind className="h-5 w-5" />,
-            color: "text-purple-500",
+            icon: <Wind className="h-10 w-10" />,
+            color: "text-gray-500",
           },
         ]
 
-        setRiskFactors(mockRiskFactors)
+        const sortedRiskFactors = mockRiskFactors.sort((a, b) => b.level - a.level);
+
+        setRiskFactors(sortedRiskFactors)
         setLoading(false)
       }, 1000)
     }
@@ -88,37 +90,31 @@ export default function RiskAssessment({ location, crop }: RiskAssessmentProps) 
   return (
     <div className="space-y-3 sm:space-y-4 py-3 sm:py-4">
       <h3 className="text-lg sm:text-xl font-semibold">
-        Risk Assessment for {crop.charAt(0).toUpperCase() + crop.slice(1)} in {location}
+        Risks for {crop.charAt(0).toUpperCase() + crop.slice(1)}
       </h3>
-      <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
-        Based on current climate data and historical patterns, here are the key risks for your crop:
+      <p className="text-sm sm:text-base text-gray-600 mb-5 sm:mb-4">
+        Based on climate and soil data here are the key risks for your crop:
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {riskFactors.map((factor, index) => (
-          <Card key={index}>
-            <CardHeader className="pb-2 px-3 sm:px-6 py-3 sm:py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
+          <Card key={index} className="flex flex-col gap-2">
+            <CardHeader className="pb-2 px-4 sm:px-6 py-1 sm:py-4">
+              <div className="flex items-center justify-start gap-2">
+                <div className="flex items-center gap-2">
                   <div className={`mr-2 ${factor.color}`}>{factor.icon}</div>
                   <CardTitle className="text-base sm:text-lg">{factor.name}</CardTitle>
                 </div>
-                <span
-                  className={`text-xs sm:text-sm font-bold ${factor.level > 70 ? "text-red-500" : factor.level > 40 ? "text-yellow-500" : "text-green-500"}`}
-                >
-                  {factor.level > 70 ? "High" : factor.level > 40 ? "Medium" : "Low"}
-                </span>
               </div>
             </CardHeader>
-            <CardContent className="px-3 sm:px-6 py-2 sm:py-3">
+            <CardContent className="px-4 sm:px-6 py-1 sm:py-3">
               <Progress
                 value={factor.level}
-                className={`h-2 ${factor.level > 70 ? "bg-red-100" : factor.level > 40 ? "bg-yellow-100" : "bg-green-100"}`}
-                indicatorClassName={
-                  factor.level > 70 ? "bg-red-500" : factor.level > 40 ? "bg-yellow-500" : "bg-green-500"
-                }
+                className="h-2"
+                barColor={`${factor.level > 70 ? "bg-red-400" : factor.level > 40 ? "bg-yellow-400" : "bg-green-400"}`}
               />
-              <CardDescription className="mt-2 text-xs sm:text-sm">{factor.description}</CardDescription>
+
+              {/* <CardDescription className="mt-2 text-xs sm:text-sm">{factor.description}</CardDescription> */}
             </CardContent>
           </Card>
         ))}
