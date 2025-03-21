@@ -71,14 +71,7 @@ export default function RiskAssessment({ location, crop, handleSerisouRiskFactor
             description: "High night time temperatures can affect plant growth",
             icon: <Moon className="h-10 w-10" />,
             color: "text-yellow-950",
-          },
-          {
-            name: "Frost stress",
-            level: response.frost_stress*10 || 0,
-            description: "Low temperatures can casue serious demage to the plant",
-            icon: <Snowflake className="h-10 w-10" />,
-            color: "text-gray-500",
-          },
+          }
         ]
 
         // Sort the risk factors by level in descending order
