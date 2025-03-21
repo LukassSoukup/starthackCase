@@ -87,7 +87,9 @@ export default function LocationSelector({ onSelect }: LocationSelectorProps) {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         try {
-          const { latitude, longitude } = position.coords
+          // const { latitude, longitude } = position.coords
+          const latitude = 22.612490
+          const longitude = 74.608683
           console.log(longitude.toString(), latitude.toString())
           localStorage.setItem("longitude", longitude.toString());
           localStorage.setItem("latitude", latitude.toString());
