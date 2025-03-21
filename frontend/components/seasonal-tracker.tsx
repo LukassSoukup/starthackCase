@@ -40,7 +40,7 @@ export default function SeasonalTracker({ location, crop }: SeasonalTrackerProps
     yield: [5, 7, 20, 25, 10, 35, 37, 42, 32, 35, 30, 28],
     productAppliedDates: [
       { date: "2025-02-01", product: "Stress Buster" },
-      { date: "2025-05-01", product: "Nutrient Booster" },
+      { date: "2025-05-01", product: "Yield Booster" },
       { date: "2025-09-01", product: "Stress Buster" },
     ],
   };
