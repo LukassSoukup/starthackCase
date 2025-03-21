@@ -1,7 +1,9 @@
 import fastapi
 import uvicorn
 from gemini import recommendation_system
+from api import get_forecast_stress, get_historical_data
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import date
 
 app = fastapi.FastAPI()
 app.add_middleware(
@@ -25,12 +27,7 @@ def get_risks(lat: float, lon: float, crop: str):
     Returns:
         dict: A dictionary containing various risk indices.
     """
-    return {
-        "daytime_heat_stress": 3,
-        "nighttime_heat_stress": 4,
-        "frost_stress": 9,
-        "drought_index": 0,
-    }
+    return get_historical_data(lat, lon, crop)
 
 
 @app.get("/recommendations")

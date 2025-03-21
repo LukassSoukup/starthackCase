@@ -2,7 +2,7 @@ from google import genai
 import json
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from api import get_api_data
+from api import get_forecast_data
 import os
 
 class Recommendation(BaseModel):
@@ -18,7 +18,7 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 def recommendation_system(crop: str, lat: float, lon: float): 
 
     # Compute API data
-    api_data = get_api_data(lat, lon, crop)
+    api_data = get_forecast_data(lat, lon, crop)
 
     # Products Catalog
     with open("./docs/syngenta_products.md", "r", encoding="utf-8") as fp:
