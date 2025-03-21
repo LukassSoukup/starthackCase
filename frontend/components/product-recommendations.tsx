@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Leaf, Calendar, ThumbsUp, ArrowBigDown, ArrowBigUp, ShoppingCart } from "lucide-react";
+import { Leaf, Calendar, ThumbsUp, ThumbsDown, ArrowBigDown, ArrowBigUp, ShoppingCart } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { RiskFactor } from "./risk-assessment";
 import { fetchRecommendations, RecommendationsResponse } from "@/app/server/api/ApiHandler"; // Import the API handler
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 import { getLocation } from "@/lib/utils";
 
 interface ProductRecommendationsProps {
@@ -16,14 +18,18 @@ interface ProductRecommendationsProps {
 }
 
 interface Product {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  benefits: string[];
-  applicationTiming: string;
-  efficacyScore: number;
-  link: string;
+  id: string
+  name: string
+  type: string
+  description: string,
+  benefits: string[]
+  applicationTiming: string
+  efficacyScore: number
+  link: string
+  userFeedback?: {
+    helpful: boolean | null
+    comment: string
+  }
 }
 
 interface MockDataInterface {
@@ -41,6 +47,9 @@ export default function ProductRecommendations({ crop, selectedRisk }: ProductRe
   const [loading, setLoading] = useState(true);
   const { latitude, longitude } = getLocation();
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
+  const [feedbackProductId, setFeedbackProductId] = useState<string | null>(null)
+  const [comment, setComment] = useState("")
+
   const MockData: MockDataInterface = {
     "Nutrient Booster": {
       link: "https://www.syngentabiologicals.com/usa/en-us/products/farm/biostimulants/",
@@ -129,6 +138,53 @@ export default function ProductRecommendations({ crop, selectedRisk }: ProductRe
     }
   }, [location, crop]);
 
+  const handleFeedback = (productId: string, helpful: boolean) => {
+    setFeedbackProductId(productId)
+    setComment("")
+  }
+
+  const submitFeedback = () => {
+    if (!feedbackProductId) return
+    
+    setProducts(prevProducts => 
+      prevProducts.map(product => 
+        product.id === feedbackProductId 
+          ? {
+              ...product, 
+              userFeedback: {
+                helpful: product.userFeedback?.helpful ?? true,
+                comment
+              }
+            }
+          : product
+      )
+    )
+    
+    setFeedbackProductId(null)
+    setComment("")
+    
+    // In a real application, you would send this feedback to your backend
+    console.log(`Feedback submitted for product ${feedbackProductId}:`, comment)
+  }
+
+  const provideFeedback = (productId: string, helpful: boolean) => {
+    setProducts(prevProducts => 
+      prevProducts.map(product => 
+        product.id === productId 
+          ? {
+              ...product, 
+              userFeedback: {
+                helpful,
+                comment: product.userFeedback?.comment || ""
+              }
+            }
+          : product
+      )
+    )
+    
+    handleFeedback(productId, helpful)
+  }
+
   if (loading) {
     return (
       <div className="p-4 sm:p-8 flex justify-center">
@@ -141,19 +197,20 @@ export default function ProductRecommendations({ crop, selectedRisk }: ProductRe
     );
   }
 
+
+
   return (
     <div className="space-y-3 sm:space-y-4 py-3 sm:py-4">
-      <h3 className="text-lg sm:text-xl font-semibold">Recommended Biological Products</h3>
+      <h3 className="text-lg sm:text-xl font-semibold">Recommended Products</h3>
       <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
-        Based on your location, crop selection, and current environmental conditions, we recommend the following
-        biological products:
+          Based on location, crop, and forecast, we recommend the following products:
       </p>
 
       <div className="space-y-3 sm:space-y-4">
         {products.map((product) => (
           <Card
             key={product.id}
-            className="overflow-hidden"
+            className="overflow-hidden gap-0"
             onClick={(e) => {
               if ((e.target as HTMLElement).closest("button")) return;
               setExpandedProductId(product.id === expandedProductId ? null : product.id);
@@ -198,28 +255,90 @@ export default function ProductRecommendations({ crop, selectedRisk }: ProductRe
               </div>
             </CardHeader>
             {expandedProductId === product.id && (
-              <CardContent className="pt-0 pb-7 pl-8">
+              <CardContent className="p-5">
                 <CardDescription className="text-sm sm:text-base text-gray-700 mb-3" title={product.name}>
                   {product.description}
                 </CardDescription>
                 <div className="mt-2">
                   <h4 className="text-xs sm:text-sm font-medium mb-1">Key Benefits:</h4>
-                  <ul className="list-disc pl-4 sm:pl-5 text-xs sm:text-sm text-gray-600 space-y-1">
+                  <ul className="list-disc pl-4 sm:pl-5 text-xs sm:text-sm text-gray-600 gap-0">
                     {product.benefits.map((benefit, index) => (
                       <li key={index}>{benefit}</li>
                     ))}
                   </ul>
                 </div>
-                <div className="flex items-center mt-3 text-xs sm:text-sm text-gray-600">
+                <div className="flex items-center mt-1 text-xs sm:text-sm text-gray-600">
                   <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-gray-500" />
                   <span>{product.applicationTiming}</span>
                 </div>
               </CardContent>
             )}
+
+            {/* Feedback Section */}
+            <div className="border-t px-4 py-3 bg-gray-50">
+ 
+                <div className="flex items-center justify-end text-sm">
+                  <div className="flex space-x-3">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center"
+                      onClick={() => provideFeedback(product.id, true)}
+                    >
+                      {product.userFeedback?.helpful == true ? (
+                        <span className="text-green-600 flex items-center">
+                          <ThumbsUp className="h-4 w-4" />
+                        </span>
+                      ) : (
+                        <ThumbsUp className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center"
+                      onClick={() => provideFeedback(product.id, false)}
+                    >
+                      {product.userFeedback?.helpful == false ? (
+                        <span className="text-red-600 flex items-center">
+                          <ThumbsDown className="h-4 w-4" />
+                        </span>
+                      ) : (
+                        <ThumbsDown className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+              {product.id === feedbackProductId && (
+                <div className="space-y-2 mt-4">
+                  <Textarea
+                    placeholder="Share your experience with this product (optional)"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="min-h-24 text-sm"
+                  />
+                  <div className="flex justify-end space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setFeedbackProductId(null)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={submitFeedback}
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </Card>
         ))}
       </div>
     </div>
-  );
+  )
 }
-
