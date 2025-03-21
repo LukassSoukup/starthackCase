@@ -7,7 +7,7 @@ import os
 from typing import Literal
 
 class Recommendation(BaseModel):
-    product: Literal["Nutrient Booster","Stress Buster","Yield Booster"]
+    product: Literal["Stress Buster","Yield Booster"]
     simple_description: str
     detailed_description: str
 
@@ -31,6 +31,7 @@ def recommendation_system(crop: str, lat: float, lon: float):
 
     prompt = f"""
     You are an intelligent agricultural recommender system for farmers in India. 
+    Nutrient Booster is not used in India.
     Your goal is to analyze the weather and soil conditions for the next 30 days and provide precise recommendations on Syngenta products that can optimize crop growth and yield. 
     You will also consider various algorithms to compute the crop stress index based on the provided data.
 
