@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Droplets, TriangleAlert, Moon, Sun, Snowflake } from "lucide-react"
@@ -15,7 +15,7 @@ interface RiskAssessmentProps {
   handleSerisouRiskFactor: (factor: RiskFactor) => void
 }
 
-interface RiskFactor {
+export interface RiskFactor {
   name: string
   level: number
   description: string
