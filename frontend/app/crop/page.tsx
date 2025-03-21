@@ -27,6 +27,9 @@ export default function CropPage() {
   }
 
   const handleBack = () => {
+    localStorage.removeItem("latitude")
+    localStorage.removeItem("longitude")
+    localStorage.removeItem("selectedLocation")
     router.push("/location")
   }
 

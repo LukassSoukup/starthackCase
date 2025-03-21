@@ -12,3 +12,8 @@ export const getLocation = () => {
     latitude: parseFloat(localStorage.getItem("latitude") || "0")
   }
 }
+
+export const setLocation = (lat:string, lon:string) => {
+  localStorage["longitude"] = lat
+  localStorage["latitude"] = lon
+}

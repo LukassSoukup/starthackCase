@@ -16,7 +16,7 @@ export default function DashboardPage() {
   const [crop, setCrop] = useState<string>("")
   const [activeTab, setActiveTab] = useState("risks")
   const [loading, setLoading] = useState(true)
-console.log("activeTab", activeTab);
+
   useEffect(() => {
     // Get the selected location and crop from localStorage
     const storedLocation = localStorage.getItem("selectedLocation")
@@ -36,10 +36,6 @@ console.log("activeTab", activeTab);
     setCrop(storedCrop)
     setLoading(false)
   }, [router])
-
-  const handleChangeSelection = () => {
-    router.push("/location")
-  }
 
   const handleBack = () => {
     router.push("/crop")
@@ -87,7 +83,7 @@ console.log("activeTab", activeTab);
         </p>
       </div>
 
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="flex flex-wrap justify-between w-full h-auto">
             <TabsTrigger value="risks" className="py-2 text-xs sm:text-sm w-full sm:w-auto">
               Risks
