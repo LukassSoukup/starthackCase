@@ -1,10 +1,19 @@
 "use client"
 
-import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Calendar, CheckCircle2, AlertCircle, BarChart3 } from "lucide-react"
+import { BarChart3 } from "lucide-react"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+  Legend,
+} from "recharts";
 
 interface SeasonalTrackerProps {
   location: string
@@ -12,122 +21,39 @@ interface SeasonalTrackerProps {
 }
 
 export default function SeasonalTracker({ location, crop }: SeasonalTrackerProps) {
-  const [activePhase, setActivePhase] = useState("planning")
+  // Forecast data
+  const forecastData = {
+    dates: [
+      "2025-01-01",
+      "2025-02-01",
+      "2025-03-01",
+      "2025-04-01",
+      "2025-05-01",
+      "2025-06-01",
+      "2025-07-01",
+      "2025-08-01",
+      "2025-09-01",
+      "2025-10-01",
+      "2025-11-01",
+      "2025-12-01",
+    ],
+    yield: [5, 7, 20, 25, 10, 35, 37, 42, 32, 35, 30, 28],
+    productAppliedDates: [
+      { date: "2025-02-01", product: "Stress Buster" },
+      { date: "2025-05-01", product: "Nutrient Booster" },
+      { date: "2025-09-01", product: "Stress Buster" },
+    ],
+  };
 
-  // Mock data for seasonal phases
-  const phases = [
-    { id: "planning", name: "Planning", status: "completed" },
-    { id: "planting", name: "Planting", status: "active" },
-    { id: "growing", name: "Growing", status: "upcoming" },
-    { id: "harvesting", name: "Harvesting", status: "upcoming" },
-  ]
-
-  // Mock data for tasks
-  const tasks = [
-    { id: 1, name: "Soil testing", phase: "planning", status: "completed", date: "2023-01-15" },
-    { id: 2, name: "Select biological products", phase: "planning", status: "completed", date: "2023-01-20" },
-    { id: 3, name: "Apply soil amendments", phase: "planting", status: "completed", date: "2023-02-05" },
-    { id: 4, name: "Plant seeds", phase: "planting", status: "in-progress", date: "2023-02-10" },
-    { id: 5, name: "Apply BioDefend", phase: "growing", status: "upcoming", date: "2023-03-01" },
-    { id: 6, name: "Monitor for pests", phase: "growing", status: "upcoming", date: "2023-03-15" },
-    { id: 7, name: "Apply NaturalShield Pro", phase: "growing", status: "upcoming", date: "2023-04-01" },
-    { id: 8, name: "Prepare for harvest", phase: "harvesting", status: "upcoming", date: "2023-05-15" },
-  ]
-
-  const filteredTasks = tasks.filter((task) => task.phase === activePhase)
+  const chartData = forecastData.dates.map((date, index) => ({
+    date,
+    yield: forecastData.yield[index],
+  }));
 
   return (
     <div className="space-y-3 sm:space-y-4 py-3 sm:py-4">
-      <h3 className="text-lg sm:text-xl font-semibold">Seasonal Tracker</h3>
-      <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
-        Track your progress throughout the growing season and manage biological product applications.
-      </p>
-
-      <div className="flex overflow-x-auto pb-2 mb-3 sm:mb-4 -mx-3 px-3 sm:mx-0 sm:px-0">
-        <div className="flex space-x-1 sm:space-x-2">
-          {phases.map((phase, index) => (
-            <div key={phase.id} className="flex items-center">
-              {index > 0 && (
-                <div
-                  className={`h-0.5 w-4 sm:w-8 ${phase.status === "completed" ? "bg-green-500" : "bg-gray-200"}`}
-                ></div>
-              )}
-              <Button
-                variant={activePhase === phase.id ? "default" : "outline"}
-                className={`rounded-full text-xs sm:text-sm py-1 px-2 sm:py-2 sm:px-3 h-auto ${
-                  phase.status === "completed"
-                    ? "border-green-500 text-green-700"
-                    : phase.status === "active"
-                      ? "border-blue-500 text-blue-700"
-                      : "border-gray-300 text-gray-500"
-                }`}
-                onClick={() => setActivePhase(phase.id)}
-              >
-                {phase.name}
-              </Button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
-          <CardTitle className="text-base sm:text-lg">
-            {phases.find((p) => p.id === activePhase)?.name} Phase Tasks
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="px-3 sm:px-6 py-2 sm:py-4">
-          <div className="space-y-3 sm:space-y-4">
-            {filteredTasks.length > 0 ? (
-              filteredTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className={`p-2 sm:p-3 rounded-lg border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 ${
-                    task.status === "completed"
-                      ? "bg-green-50 border-green-200"
-                      : task.status === "in-progress"
-                        ? "bg-blue-50 border-blue-200"
-                        : "bg-gray-50 border-gray-200"
-                  }`}
-                >
-                  <div className="flex items-center">
-                    {task.status === "completed" ? (
-                      <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-500 mr-2 sm:mr-3 flex-shrink-0" />
-                    ) : task.status === "in-progress" ? (
-                      <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500 mr-2 sm:mr-3 flex-shrink-0" />
-                    ) : (
-                      <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0" />
-                    )}
-                    <div>
-                      <p className="font-medium text-sm sm:text-base">{task.name}</p>
-                      <p className="text-xs sm:text-sm text-gray-500">Due: {task.date}</p>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    disabled={task.status === "completed"}
-                    className="text-xs sm:text-sm h-7 sm:h-8 self-end sm:self-auto"
-                  >
-                    {task.status === "completed"
-                      ? "Completed"
-                      : task.status === "in-progress"
-                        ? "Mark Complete"
-                        : "Start Task"}
-                  </Button>
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-6 sm:py-8 text-gray-500 text-sm sm:text-base">
-                No tasks for this phase yet.
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="mt-1 sm:mt-1">
-        <CardHeader className="px-3 sm:px-6">
+      <Card className="mt-1 sm:mt-1 pb-5">
+        <CardHeader className="px-3 sm:px-6 pt-5">
           <CardTitle className="text-base sm:text-lg flex items-center">
             <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-blue-500" />
             Season Performance Tracking
@@ -135,39 +61,64 @@ export default function SeasonalTracker({ location, crop }: SeasonalTrackerProps
         </CardHeader>
         <CardContent className="px-3 sm:px-6">
           <Tabs defaultValue="yield">
-            <TabsList className="grid w-full grid-cols-2 h-auto">
+            <TabsList className="grid w-full grid-cols-1 h-auto">
               <TabsTrigger value="yield" className="text-xs sm:text-sm py-1 sm:py-2">
                 Yield Forecast
               </TabsTrigger>
-              <TabsTrigger value="health" className="text-xs sm:text-sm py-1 sm:py-2">
-                Crop Health
-              </TabsTrigger>
             </TabsList>
             <TabsContent value="yield" className="pt-3 sm:pt-4">
-              <div className="h-36 sm:h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500 text-xs sm:text-sm text-center px-4">
-                  Yield forecast data will appear here as the season progresses
-                </p>
+              <div className="h-64 sm:h-80 bg-gray-100 rounded-lg flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      formatter={(value) => {
+                        if (value === "yield") return "Yield (kg/ha)";
+                        return value;
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="yield"
+                      stroke="#8884d8"
+                      strokeWidth={2}
+                      name="Yield (kg/ha)"
+                    />
+                    {forecastData.productAppliedDates.map(({ date }) => (
+                      <ReferenceLine
+                        key={date}
+                        x={date}
+                        stroke="red"
+                        strokeDasharray="3 3"
+                      />
+                    ))}
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
-            </TabsContent>
-            <TabsContent value="health" className="pt-3 sm:pt-4">
-              <div className="h-36 sm:h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500 text-xs sm:text-sm text-center px-4">
-                  Crop health metrics will be displayed here throughout the growing season
-                </p>
-              </div>
-            </TabsContent>
-            <TabsContent value="sustainability" className="pt-3 sm:pt-4">
-              <div className="h-36 sm:h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500 text-xs sm:text-sm text-center px-4">
-                  Sustainability impact data will be calculated based on your biological product usage
-                </p>
+              <div className="mt-4">
+                <h4 className="text-sm font-semibold mb-2">Products Applied:</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {forecastData.productAppliedDates.map(({ date, product }) => (
+                    <div
+                      key={date}
+                      className="bg-white shadow-md rounded-lg p-4 border border-gray-200 flex flex-col items-start"
+                    >
+                      <span className="text-base font-medium text-gray-800">{product}</span>
+                      <span className="text-sm text-gray-600 mt-1">Applied on {date}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 

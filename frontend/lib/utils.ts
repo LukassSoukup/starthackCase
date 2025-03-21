@@ -8,8 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getLocation = () => {
   return {
-    longitude: parseFloat(localStorage.getItem("longitude") || "0"),
-    latitude: parseFloat(localStorage.getItem("latitude") || "0")
+    longitude: parseFloat(localStorage.getItem("longitude") || "74.608683"),
+    latitude: parseFloat(localStorage.getItem("latitude") || "22.612490")
   }
 }
 
