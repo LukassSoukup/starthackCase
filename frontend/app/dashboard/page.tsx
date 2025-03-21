@@ -16,7 +16,6 @@ export default function DashboardPage() {
   const [crop, setCrop] = useState<string>("")
   const [activeTab, setActiveTab] = useState("risks")
   const [loading, setLoading] = useState(true)
-  const [selectedRisk, setSelectedRisk] = useState(null)
 
   useEffect(() => {
     // Get the selected location and crop from localStorage
@@ -65,7 +64,6 @@ export default function DashboardPage() {
   const handleSerisouRiskFactor = (factor: any) => {
     if (factor.level > 70) {
       setActiveTab("recommendations");
-      setSelectedRisk(factor);
     }
   }
 
@@ -103,7 +101,7 @@ export default function DashboardPage() {
             <RiskAssessment location={location} crop={crop} handleSerisouRiskFactor={handleSerisouRiskFactor}/>
           </TabsContent>
           <TabsContent value="recommendations">
-            <ProductRecommendations location={location} crop={crop} selectedRisk={selectedRisk}/>
+            <ProductRecommendations location={location} crop={crop}/>
           </TabsContent>
           <TabsContent value="tracker">
             <SeasonalTracker location={location} crop={crop} />

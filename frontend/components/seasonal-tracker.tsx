@@ -67,12 +67,12 @@ export default function SeasonalTracker({ location, crop }: SeasonalTrackerProps
               </TabsTrigger>
             </TabsList>
             <TabsContent value="yield" className="pt-3 sm:pt-4">
-              <div className="h-64 sm:h-80 bg-gray-100 rounded-lg flex items-center justify-center">
+              <div className="h-64 sm:h-80 bg-whites rounded-lg flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                    <YAxis tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} width={15}/>
                     <Tooltip />
                     <Legend
                       verticalAlign="bottom"

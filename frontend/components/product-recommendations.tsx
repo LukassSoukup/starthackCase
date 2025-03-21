@@ -14,7 +14,6 @@ import { getLocation } from "@/lib/utils";
 interface ProductRecommendationsProps {
   location: string;
   crop: string;
-  selectedRisk?: RiskFactor;
 }
 
 interface Product {
@@ -42,14 +41,14 @@ interface MockDataInterface {
   };
 }
 
-export default function ProductRecommendations({ crop, selectedRisk }: ProductRecommendationsProps) {
+export default function ProductRecommendations({ crop }: ProductRecommendationsProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const { latitude, longitude } = getLocation();
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
   const [feedbackProductId, setFeedbackProductId] = useState<string | null>(null)
   const [comment, setComment] = useState("")
-
+ 
   const MockData: MockDataInterface = {
     "Nutrient Booster": {
       link: "https://www.syngentabiologicals.com/usa/en-us/products/farm/biostimulants/",
