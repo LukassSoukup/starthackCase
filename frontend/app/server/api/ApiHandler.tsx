@@ -7,8 +7,9 @@ interface RiskResponse {
     drought_index: number;
 }
 
-interface RecommendationsResponse {
-    text: string,
+export interface RecommendationsResponse {
+    detailed_description: string,
+    simple_description: string,
     product: string
 }
 
