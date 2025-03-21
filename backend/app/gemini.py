@@ -4,9 +4,10 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from api import get_forecast_data
 import os
+from typing import Literal
 
 class Recommendation(BaseModel):
-    product: str
+    product: Literal["Nutrient Booster","Stress Buster","Yield Booster"]
     simple_description: str
     detailed_description: str
 
